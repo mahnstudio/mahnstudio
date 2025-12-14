@@ -6,8 +6,6 @@
   <title>Notion Uhr + Datum + KW</title>
   <style>
     :root{
-      --bg1:#0b0b0f;
-      --bg2:#151522;
       --card:rgba(255,255,255,.10);
       --stroke:rgba(255,255,255,.14);
       --text:rgba(255,255,255,.92);
@@ -19,9 +17,7 @@
     body{
       display:grid;
       place-items:center;
-      background: radial-gradient(1200px 700px at 20% 10%, #2b2b55 0%, transparent 55%),
-                  radial-gradient(900px 600px at 90% 40%, #1f6b7a 0%, transparent 55%),
-                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      background: none; /* <— Gradient entfernt (entspricht transparent) */ /* [web:41] */
       font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", "SF Pro Text", Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
     }
@@ -111,7 +107,6 @@
 
   <script>
     // ISO-8601 Kalenderwoche (Montag=1, Woche 1 enthält den ersten Donnerstag)
-    // Algorithmus nach gängiger ISO-week Berechnung in JS. [web:12]
     function isoWeek(date){
       const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
       const dayNum = d.getUTCDay() || 7;      // So=0 -> 7
@@ -129,26 +124,22 @@
       const mm = pad2(now.getMinutes());
       const ss = pad2(now.getSeconds());
 
-      // Uhr (mit Sekunden, wirkt „live“)
       document.getElementById("time").textContent = `${hh}:${mm}:${ss}`;
 
-      // Datum (de-DE)
       const dateFmt = new Intl.DateTimeFormat("de-DE", {
         weekday: "long", year: "numeric", month: "long", day: "2-digit"
       }).format(now);
       document.getElementById("date").textContent = dateFmt;
 
-      // KW
       const w = isoWeek(now);
       document.getElementById("kw").textContent = `KW ${w.week} · ${w.year}`;
 
-      // Zeitzone
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "lokal";
       document.getElementById("tz").textContent = `Zeitzone: ${tz}`;
     }
 
     render();
-    setInterval(render, 250); // flüssig, ohne schwer zu sein
+    setInterval(render, 250);
   </script>
 </body>
 </html>
